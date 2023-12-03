@@ -46,7 +46,47 @@ export const userService = {
   isExistByStudentId: (studentId: string) => User.exists({ studentId }),
 
   getAll: () => User.find(),
-  find: (filter: any) => User.find(filter),
+  find: (filter: any) =>
+    User.aggregate([
+      { $match: filter },
+      {
+        $project: {
+          firstName: 1,
+          lastName: 1,
+          email: 1,
+          gender: 1,
+          grade: 1,
+          studentId: 1,
+          verified: 1,
+          balance: {
+            $subtract: [
+              {
+                $reduce: {
+                  input: "$feeAccount",
+                  initialValue: "0",
+                  in: {
+                    $add: [
+                      "$$value",
+                      { $toInt: "$$this.paidAmount" },
+                      { $toInt: "$$this.discount" },
+                    ],
+                  },
+                },
+              },
+              {
+                $reduce: {
+                  input: "$feeAccount",
+                  initialValue: "0",
+                  in: {
+                    $add: ["$$value", { $toInt: "$$this.payableAmount" }],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    ]),
 
   updatePasswordByUserId: (
     userId: ObjectId,
