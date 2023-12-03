@@ -72,6 +72,8 @@ export const feeAccountController = {
         status: StatusCodes.OK,
       });
     } catch (error: any) {
+      console.log(error);
+
       return res.status(StatusCodes.BAD_REQUEST).json({
         message: ReasonPhrases.BAD_REQUEST,
         status: StatusCodes.BAD_REQUEST,

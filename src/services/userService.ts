@@ -58,17 +58,26 @@ export const userService = {
           grade: 1,
           studentId: 1,
           verified: 1,
+          feeAccount: 1,
           balance: {
             $subtract: [
               {
                 $reduce: {
                   input: "$feeAccount",
-                  initialValue: "0",
+                  initialValue: 0,
                   in: {
                     $add: [
                       "$$value",
-                      { $toInt: "$$this.paidAmount" },
-                      { $toInt: "$$this.discount" },
+                      {
+                        $toInt: {
+                          $ifNull: [{ $toDouble: "$$this.paidAmount" }, 0],
+                        },
+                      },
+                      {
+                        $toInt: {
+                          $ifNull: [{ $toDouble: "$$this.discount" }, 0],
+                        },
+                      },
                     ],
                   },
                 },
@@ -76,9 +85,11 @@ export const userService = {
               {
                 $reduce: {
                   input: "$feeAccount",
-                  initialValue: "0",
+                  initialValue: 0,
                   in: {
-                    $add: ["$$value", { $toInt: "$$this.payableAmount" }],
+                    $toInt: {
+                      $ifNull: [{ $toDouble: "$$this.payableAmount" }, 0],
+                    },
                   },
                 },
               },
