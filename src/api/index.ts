@@ -9,7 +9,7 @@ import terms from "./routes/terms";
 import opportunityRequest from "./routes/opportunityRequest";
 import contactUs from "./routes/contactUs";
 import news from "./routes/news";
-import blog from "./routes/blog";
+import feeAccount from "./routes/feeAccount";
 
 const router: Router = Router();
 
@@ -25,7 +25,7 @@ const routes: {
   opportunityRequest,
   contactUs,
   news,
-  blog,
+  feeAccount,
 };
 
 for (const route in routes) {

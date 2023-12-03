@@ -4,19 +4,37 @@ import { User } from "../models";
 
 export const userService = {
   create: ({
+    firstName,
+    lastName,
+    gender,
     email,
+    grade,
+    studentId,
+    feeAccount,
     password,
     verified = false,
   }: {
+    firstName: string;
+    lastName: string;
+    gender: string;
     email: string;
+    grade: string;
+    studentId: string;
+    feeAccount: any;
     password: string;
     verified?: boolean;
   }) =>
     // session?: ClientSession
     new User({
+      firstName,
+      lastName,
+      gender,
       email,
+      grade,
+      studentId,
       password,
       verified,
+      feeAccount,
     }).save(),
 
   getById: (userId: ObjectId) => User.findById(userId),
@@ -24,6 +42,11 @@ export const userService = {
   getByEmail: (email: string) => User.findOne({ email }),
 
   isExistByEmail: (email: string) => User.exists({ email }),
+
+  isExistByStudentId: (studentId: string) => User.exists({ studentId }),
+
+  getAll: () => User.find(),
+  find: (filter: any) => User.find(filter),
 
   updatePasswordByUserId: (
     userId: ObjectId,
@@ -66,10 +89,32 @@ export const userService = {
 
   updateProfileByUserId: (
     userId: ObjectId,
-    { firstName, lastName }: { firstName: string; lastName: string },
+    {
+      firstName,
+      lastName,
+      gender,
+      grade,
+    }: { firstName: string; lastName: string; gender: string; grade: string },
     session?: ClientSession
   ) => {
-    const data = [{ _id: userId }, { firstName, lastName }];
+    const data = [{ _id: userId }, { firstName, lastName, gender }];
+
+    let params = null;
+
+    if (session) {
+      params = [...data, { session }];
+    } else {
+      params = data;
+    }
+
+    return User.updateOne(...params);
+  },
+  updateFeeAccount: (
+    userId: ObjectId,
+    { feeAccount }: { feeAccount: any },
+    session?: ClientSession
+  ) => {
+    const data = [{ _id: userId }, { feeAccount }];
 
     let params = null;
 

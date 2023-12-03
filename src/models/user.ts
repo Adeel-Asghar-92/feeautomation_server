@@ -3,12 +3,39 @@ import { compareSync } from "bcrypt";
 
 import { IUser, IUserMethods, UserModel } from "../contracts/user";
 
+const feeAccountSchema = new Schema({
+  voucherId: {
+    type: String,
+  },
+  dueDate: {
+    type: Date,
+    default: Date.now,
+  },
+  paidDate: {
+    type: Date,
+  },
+  payableAmount: {
+    type: String,
+  },
+  paidAmount: {
+    type: String,
+  },
+  discount: {
+    type: String,
+  },
+});
+
 const schema = new Schema<IUser, UserModel, IUserMethods>(
   {
-    email: String,
-    password: String,
     firstName: String,
     lastName: String,
+    email: String,
+    password: String,
+    gender: String,
+    grade: String,
+    studentId: String,
+    isAdmin: Boolean,
+    feeAccount: [feeAccountSchema],
     verified: {
       type: Boolean,
       default: false,

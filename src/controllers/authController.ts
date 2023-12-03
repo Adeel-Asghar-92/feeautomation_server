@@ -25,6 +25,25 @@ import {
 import { createCryptoString } from "../utils/cryptoString";
 import { createDateAddDaysFromNow } from "../utils/dates";
 import { createHash } from "../utils/hash";
+import { IFeeAccount } from "../contracts/user";
+
+const generateFeeAccountsForYear = (year: number): IFeeAccount[] => {
+  const feeAccounts: IFeeAccount[] = [];
+  const currentYear = new Date().getFullYear();
+  const monthsInYear = 12;
+
+  for (let month = 0; month < monthsInYear; month++) {
+    feeAccounts.push({
+      voucherId: "VOC-" + Math.random().toString().slice(-8),
+      dueDate: new Date(year, month, 10), // Set the date to the 1st of each month
+      paidDate: null, // Set the date to the 1st of each month
+      payableAmount: "0",
+      paidAmount: "0",
+      discount: "0",
+    });
+  }
+  return feeAccounts;
+};
 
 export const authController = {
   signIn: async ({ body: { email, password } }: Request, res: Response) => {
@@ -57,12 +76,14 @@ export const authController = {
   },
 
   signUp: async (
-    { body: { email, password } }: IBodyRequest<SignUpPayload>,
+    {
+      body: { firstName, lastName, gender, email, grade, password },
+    }: IBodyRequest<any>,
     res: Response
   ) => {
     try {
       const isUserExist = await userService.isExistByEmail(email);
-
+      const currentYear = new Date().getFullYear();
       if (isUserExist) {
         return res.status(StatusCodes.CONFLICT).json({
           message: ReasonPhrases.CONFLICT,
@@ -72,8 +93,14 @@ export const authController = {
 
       const hashedPassword = await createHash(password);
       const user = await userService.create({
+        firstName,
+        lastName,
+        gender,
         email,
+        grade,
+        studentId: "ST" + Math.random().toString().slice(-8),
         password: hashedPassword,
+        feeAccount: generateFeeAccountsForYear(currentYear),
       });
 
       const { accessToken } = jwtSign(user.id);
@@ -91,6 +118,29 @@ export const authController = {
     }
   },
 
+  getStudents: async ({ body: {} }: Request, res: Response) => {
+    try {
+      console.log("run");
+
+      const students = await userService.getAll();
+      console.log("students", students);
+
+      return res.status(StatusCodes.OK).json({
+        data: { students },
+        message: ReasonPhrases.OK,
+        status: StatusCodes.OK,
+      });
+    } catch (error) {
+      console.log("error ====>>>>", error);
+
+      winston.error(error);
+
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: ReasonPhrases.BAD_REQUEST,
+        status: StatusCodes.BAD_REQUEST,
+      });
+    }
+  },
   // signOut: async (
   //   { context: { user, accessToken } }: IContextRequest<IUserRequest>,
   //   res: Response
