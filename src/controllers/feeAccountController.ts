@@ -76,7 +76,6 @@ export const feeAccountController = {
         );
 
         return {
-          ...student,
           _id: student._id,
           firstName: student.firstName,
           lastName: student.lastName,
@@ -96,7 +95,7 @@ export const feeAccountController = {
       console.log("studentsWithTotals", studentsWithTotals);
 
       return res.status(StatusCodes.OK).json({
-        data: { studentsWithTotals },
+        data: { students: studentsWithTotals },
         message: ReasonPhrases.OK,
         status: StatusCodes.OK,
       });
