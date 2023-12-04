@@ -77,6 +77,17 @@ export const feeAccountController = {
 
         return {
           ...student,
+          _id: student._id,
+          firstName: student.firstName,
+          lastName: student.lastName,
+          email: student.email,
+          gender: student.gender,
+          grade: student.grade,
+          studentId: student.studentId,
+          verified: student.verified,
+          createdAt: student.createdAt,
+          updatedAt: student.updatedAt,
+          feeAccount: student.feeAccount,
           totalPaidAmount,
           totalPayableAmount,
         };
