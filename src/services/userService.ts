@@ -46,58 +46,70 @@ export const userService = {
   isExistByStudentId: (studentId: string) => User.exists({ studentId }),
 
   getAll: () => User.find(),
-  find: (filter: any) =>
-    User.aggregate([
-      { $match: filter },
-      {
-        $project: {
-          firstName: 1,
-          lastName: 1,
-          email: 1,
-          gender: 1,
-          grade: 1,
-          studentId: 1,
-          verified: 1,
-          feeAccount: 1,
-          balance: {
-            $subtract: [
-              {
-                $reduce: {
-                  input: "$feeAccount",
-                  initialValue: 0,
-                  in: {
-                    $add: [
-                      "$$value",
-                      {
-                        $toInt: {
-                          $ifNull: [{ $toDouble: "$$this.paidAmount" }, 0],
-                        },
-                      },
-                      {
-                        $toInt: {
-                          $ifNull: [{ $toDouble: "$$this.discount" }, 0],
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-              {
-                $reduce: {
-                  input: "$feeAccount",
-                  initialValue: 0,
-                  in: {
-                    $toInt: {
-                      $ifNull: [{ $toDouble: "$$this.payableAmount" }, 0],
-                    },
-                  },
-                },
-              },
-            ],
-          },
-        },
-      },
-    ]),
+
+  find: (filter: any) => User.find(filter),
+  // .aggregate([
+  //   { $match: filter },
+  //   {
+  //     $project: {
+  //       firstName: 1,
+  //       lastName: 1,
+  //       email: 1,
+  //       gender: 1,
+  //       grade: 1,
+  //       studentId: 1,
+  //       verified: 1,
+  //       feeAccount: 1,
+  //       balance: {
+  //         $subtract: [
+  //           {
+  //             $reduce: {
+  //               input: "$feeAccount",
+  //               initialValue: 0,
+  //               in: {
+  //                 $add: [
+  //                   "$$value",
+  //                   {
+  //                     $toInt: {
+  //                       $ifNull: [{ $toDouble: "$$this.paidAmount" }, 0],
+  //                     },
+  //                   },
+  //                   {
+  //                     $toInt: {
+  //                       $ifNull: [{ $toDouble: "$$this.discount" }, 0],
+  //                     },
+  //                   },
+  //                 ],
+  //               },
+  //             },
+  //           },
+  //           {
+  //             $reduce: {
+  //               input: "$feeAccount",
+  //               initialValue: 0,
+  //               in: {
+  //                 $toInt: {
+  //                   $ifNull: [{ $toDouble: "$$this.payableAmount" }, 0],
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     },
+  //   },
+  //   {
+  //     $addFields: {
+  //       balance: {
+  //         $cond: {
+  //           if: { $lte: ["$balance", 0] },
+  //           then: "$balance",
+  //           else: { $subtract: [0, "$balance"] },
+  //         },
+  //       },
+  //     },
+  //   },
+  // ]),
 
   updatePasswordByUserId: (
     userId: ObjectId,

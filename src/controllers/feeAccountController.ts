@@ -65,9 +65,27 @@ export const feeAccountController = {
 
       // Fetching students based on the constructed filter
       const students = await userService.find(filter);
+      const studentsWithTotals = students.map((student: any) => {
+        const totalPaidAmount = student.feeAccount.reduce(
+          (acc, curr) => acc + Number(curr.paidAmount),
+          0
+        );
+        const totalPayableAmount = student.feeAccount.reduce(
+          (acc, curr) => acc + Number(curr.payableAmount),
+          0
+        );
+
+        return {
+          ...student,
+          totalPaidAmount,
+          totalPayableAmount,
+        };
+      });
+
+      console.log("studentsWithTotals", studentsWithTotals);
 
       return res.status(StatusCodes.OK).json({
-        data: { students },
+        data: { studentsWithTotals },
         message: ReasonPhrases.OK,
         status: StatusCodes.OK,
       });
