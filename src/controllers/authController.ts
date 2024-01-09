@@ -142,7 +142,7 @@ export const authController = {
         student.email= email
         student.grade= grade
         student.password= hashedPassword
-        const updatedUser = await userService.updateProfileByUserId(userId,student)
+        const updatedUser = await userService.updateProfileByUserId(_id,student)
       return res.status(StatusCodes.OK).json({
         data: { updatedUser },
         message: ReasonPhrases.OK,
