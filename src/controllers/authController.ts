@@ -119,13 +119,13 @@ export const authController = {
   },
   updateStudent: async (
     {
-      body: { firstName, lastName, gender, email, grade, password },
+      body: {_id, firstName, lastName, gender, email, grade, password },
       params: { userId },
     }: IBodyRequest<any>,
     res: Response
   ) => {
     try {
-      const student = await userService.getById(userId);
+      const student = await userService.getById(_id);
       const currentYear = new Date().getFullYear();
 
       if (!student) {
