@@ -117,6 +117,44 @@ export const authController = {
       });
     }
   },
+  updateStudent: async (
+    {
+      body: { firstName, lastName, gender, email, grade, password },
+      params: { userId },
+    }: IBodyRequest<any>,
+    res: Response
+  ) => {
+    try {
+      const student = await userService.getById(userId);
+      const currentYear = new Date().getFullYear();
+
+      if (!student) {
+        return res.status(StatusCodes.CONFLICT).json({
+          message: ReasonPhrases.CONFLICT,
+          status: StatusCodes.CONFLICT,
+        });
+      }
+
+      const hashedPassword = await createHash(password);
+        student.firstName= firstName
+        student.lastName= lastName
+        student.gender= gender
+        student.email= email
+        student.grade= grade
+        student.password= hashedPassword
+        const updatedUser = await userService.updateProfileByUserId(userId,student)
+      return res.status(StatusCodes.OK).json({
+        data: { updatedUser },
+        message: ReasonPhrases.OK,
+        status: StatusCodes.OK,
+      });
+    } catch (error) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: ReasonPhrases.BAD_REQUEST,
+        status: StatusCodes.BAD_REQUEST,
+      });
+    }
+  },
 
   getStudents: async ({ body: {} }: Request, res: Response) => {
     try {

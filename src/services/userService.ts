@@ -157,10 +157,18 @@ export const userService = {
       lastName,
       gender,
       grade,
-    }: { firstName: string; lastName: string; gender: string; grade: string },
-    session?: ClientSession
+      email,
+      password
+    }: { firstName: string; lastName: string; gender: string; grade: string; email: string, password: string },
+      session?: ClientSession
   ) => {
-    const data = [{ _id: userId }, { firstName, lastName, gender }];
+    const data = [{ _id: userId }, { firstName,
+      lastName,
+      gender,
+      grade,
+      email,
+      password 
+    }];
 
     let params = null;
 
@@ -211,57 +219,4 @@ export const userService = {
   deleteById: (userId: ObjectId, session?: ClientSession) =>
     User.deleteOne({ user: userId }, { session }),
 
-  addResetPasswordToUser: async (
-    {
-      userId,
-      resetPasswordId,
-    }: {
-      userId: ObjectId;
-      resetPasswordId: ObjectId;
-    },
-    session?: ClientSession
-  ) => {
-    let options = {};
-
-    if (session) {
-      options = { session };
-    }
-
-    const user = await User.findOne({ _id: userId }, null, options);
-
-    if (user) {
-      if (!user.resetPasswords) {
-        user.resetPasswords = [];
-      }
-      user.resetPasswords.push(resetPasswordId);
-      await user.save({ session });
-    }
-  },
-
-  addVerificationToUser: async (
-    {
-      userId,
-      verificationId,
-    }: {
-      userId: ObjectId;
-      verificationId: ObjectId;
-    },
-    session?: ClientSession
-  ) => {
-    let options = {};
-
-    if (session) {
-      options = { session };
-    }
-
-    const user = await User.findOne({ _id: userId }, null, options);
-
-    if (user) {
-      if (!user.verifications) {
-        user.verifications = [];
-      }
-      user.verifications.push(verificationId);
-      await user.save({ session });
-    }
-  },
 };
