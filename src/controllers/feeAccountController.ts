@@ -71,7 +71,7 @@ export const feeAccountController = {
           0
         );
         const totalPayableAmount = student.feeAccount.reduce(
-          (acc, curr) => acc + Number(curr.payableAmount),
+          (acc, curr) => acc + Number(curr.payableAmount) - Number(curr.discount),
           0
         );
 
