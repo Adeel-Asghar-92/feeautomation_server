@@ -14,7 +14,7 @@ export const feeAccountController = {
       const isUserExist = await userService.getById(userId);
       if (isUserExist) {
         return res.status(StatusCodes.CONFLICT).json({
-          message: ReasonPhrases.CONFLICT,
+          message: "User Not Found",
           status: StatusCodes.CONFLICT,
         });
       }
