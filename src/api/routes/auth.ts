@@ -14,6 +14,7 @@ const auth = (router: Router): void => {
 
   router.post("/auth/sign-up", authValidation.signUp, authController.signUp);
   router.post("/auth/updateStudent", authController.updateStudent);
+  router.post("/auth/getStudentsByEmail", authController.getStudentsByEmail);
 
   // router.get('/auth/sign-out',authController.signOut)
 

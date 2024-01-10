@@ -179,6 +179,29 @@ export const authController = {
       });
     }
   },
+  getStudentsByEmail: async ({ body: {email} }: Request, res: Response) => {
+    try {
+      console.log("run");
+
+      const student = await userService.getByEmail(email);
+      console.log("student", student);
+
+      return res.status(StatusCodes.OK).json({
+        data: { student },
+        message: ReasonPhrases.OK,
+        status: StatusCodes.OK,
+      });
+    } catch (error) {
+      console.log("error ====>>>>", error);
+
+      winston.error(error);
+
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: ReasonPhrases.BAD_REQUEST,
+        status: StatusCodes.BAD_REQUEST,
+      });
+    }
+  },
   // signOut: async (
   //   { context: { user, accessToken } }: IContextRequest<IUserRequest>,
   //   res: Response
