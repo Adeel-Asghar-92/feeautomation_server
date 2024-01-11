@@ -50,11 +50,11 @@ export const feeAccountController = {
       //   filter.grade = grade;
       // }
 
-      if (status === "paid") {
-        filter["feeAccount.paidAmount"] = { $ne: "0" };
-      } else if (status === "unpaid") {
-        filter["feeAccount.paidAmount"] = "0";
-      }
+      // if (status === "paid") {
+      //   filter["feeAccount.paidAmount"] = { $ne: "0" };
+      // } else if (status === "unpaid") {
+      filter["feeAccount.paidAmount"] = "0";
+      // }
 
       // if (month) {
       //   const monthNumber = parseInt(month, 10);
