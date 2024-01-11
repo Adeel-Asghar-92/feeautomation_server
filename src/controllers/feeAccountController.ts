@@ -62,13 +62,13 @@ export const feeAccountController = {
       //     $expr: { $eq: [{ $month: "$feeAccount.dueDate" }, monthNumber] },
       //   };
       // }
-      if (month !== undefined) {
+      if (month) {
         filter["feeAccount.dueDate"] = {
           $gte: new Date(`2024-${month}-01`),
           $lt: new Date(`2024-${month}-31`),
         };
       }
-      if (grade !== undefined) {
+      if (grade) {
         filter["grade"] = grade;
       }
 
